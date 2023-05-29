@@ -1,16 +1,5 @@
 FROM php:%%PHP_VERSION%%-%%VARIANT%%%%ALPINE_VERSION%%
 
-# entrypoint.sh and cron.sh dependencies
-RUN set -ex; \
-    \
-    apk add --no-cache \
-        imagemagick \
-        rsync \
-    ; \
-    \
-    rm /var/spool/cron/crontabs/root; \
-    echo '*/%%CRONTAB_INT%% * * * * php -f /var/www/html/cron.php' > /var/spool/cron/crontabs/www-data
-
 # install the PHP extensions we need
 # see https://docs.nextcloud.com/server/stable/admin_manual/installation/source_installation.html
 RUN set -ex; \

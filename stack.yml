@@ -25,15 +25,10 @@ services:
       - POSTGRES_PASSWORD=nextcloud
     depends_on:
       - db
-
-  cron:
-    image: nextcloud
-    restart: always
-    volumes:
-      - nextcloud:/var/www/html
-    entrypoint: /cron.sh
-    depends_on:
-      - db
+    healthcheck:
+      test: runuser --user www-data -- php -f '/var/www/html/cron.php'
+      interval: 5m
+      start_period: 1m
 
 volumes:
   db:

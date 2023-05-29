@@ -30,10 +30,6 @@ declare -A extras=(
 	[fpm-alpine]=''
 )
 
-declare -A crontab_int=(
-	[default]='5'
-)
-
 apcu_version="$(
 	git ls-remote --tags https://github.com/krakjoe/apcu.git \
 		| cut -d/ -f3 \
@@ -94,7 +90,6 @@ function create_variant() {
 	dir="$1/$variant"
 	alpineVersion=${alpine_version[$version]-${alpine_version[default]}}
 	phpVersion=${php_version[$version]-${php_version[default]}}
-	crontabInt=${crontab_int[$version]-${crontab_int[default]}}
 
 	# Create the version+variant directory with a Dockerfile.
 	mkdir -p "$dir"
@@ -118,7 +113,6 @@ function create_variant() {
 		s/%%MEMCACHED_VERSION%%/'"${pecl_versions[memcached]}"'/g;
 		s/%%REDIS_VERSION%%/'"${pecl_versions[redis]}"'/g;
 		s/%%IMAGICK_VERSION%%/'"${pecl_versions[imagick]}"'/g;
-		s/%%CRONTAB_INT%%/'"$crontabInt"'/g;
 	' "$dir/Dockerfile"
 
 	# Nextcloud 26+ recommends sysvsem
@@ -140,7 +134,7 @@ function create_variant() {
 	esac
 
 	# Copy the shell scripts
-	for name in entrypoint cron; do
+	for name in entrypoint; do
 		cp "docker-$name.sh" "$dir/$name.sh"
 	done
 

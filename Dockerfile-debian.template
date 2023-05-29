@@ -1,21 +1,5 @@
 FROM php:%%PHP_VERSION%%-%%VARIANT%%-bullseye
 
-# entrypoint.sh and cron.sh dependencies
-RUN set -ex; \
-    \
-    apt-get update; \
-    apt-get install -y --no-install-recommends \
-        busybox-static \
-        bzip2 \
-        libldap-common \
-        libmagickcore-6.q16-6-extra \
-        rsync \
-    ; \
-    rm -rf /var/lib/apt/lists/*; \
-    \
-    mkdir -p /var/spool/cron/crontabs; \
-    echo '*/%%CRONTAB_INT%% * * * * php -f /var/www/html/cron.php' > /var/spool/cron/crontabs/www-data
-
 # install the PHP extensions we need
 # see https://docs.nextcloud.com/server/stable/admin_manual/installation/source_installation.html
 ENV PHP_MEMORY_LIMIT 512M
